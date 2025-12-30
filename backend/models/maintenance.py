@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
-from database import Base
+from backend.database import Base
 import datetime
 
 class MaintenanceTask(Base):
