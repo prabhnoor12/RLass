@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from backend.database import Base
 import datetime
 
 class UsageStats(Base):
@@ -10,5 +10,5 @@ class UsageStats(Base):
     endpoint = Column(String, nullable=False)
     count = Column(Integer, default=0)
     period = Column(String, nullable=False)  # e.g., 'hour', 'day'
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
+    timestamp = Column(DateTime, default=lambda: datetime.datetime.now(datetime.UTC))
     user = relationship("User", back_populates="usage_stats")

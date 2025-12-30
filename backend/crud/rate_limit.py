@@ -16,9 +16,7 @@ def create_rate_limit(db: Session, config_in: RateLimitConfigCreate) -> RateLimi
         customer_id=customer_id,
         endpoint=config_in.endpoint,
         limit=config_in.limit,
-        period_seconds=config_in.period_seconds,
-        custom_for_user=bool(customer_id is not None),
-        custom_for_endpoint=bool(config_in.endpoint is not None)
+        period_seconds=config_in.period_seconds
     )
     db.add(db_config)
     db.commit()
@@ -49,7 +47,6 @@ def update_rate_limit(db: Session, api_key: str, endpoint: Optional[str], limit:
     if config:
         config.limit = limit
         config.period_seconds = period_seconds
-        config.custom_for_endpoint = bool(endpoint is not None)
         db.commit()
         db.refresh(config)
         return config

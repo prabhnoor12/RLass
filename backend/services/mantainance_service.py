@@ -46,7 +46,7 @@ def run_task(db: Session, task_id: int) -> Optional[MaintenanceTask]:
 	"""
 	task = crud_maintenance.update_maintenance_status(db, task_id, "running")
 	if task:
-		task.last_run = datetime.utcnow()
+		task.last_run = datetime.now(datetime.UTC)
 		db.commit()
 		db.refresh(task)
 		logger.info(f"Ran maintenance task {task_id}")

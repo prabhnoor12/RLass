@@ -28,7 +28,7 @@ class InMemoryRateLimitBackend(RateLimitBackend):
         self.configs = {}
 
     def check_and_log(self, api_key, identifier, endpoint, config, align_to_minute):
-        now = datetime.utcnow()
+        now = datetime.now(datetime.UTC)
         if align_to_minute:
             window_start = now.replace(second=0, microsecond=0)
         else:
@@ -73,7 +73,7 @@ class DBRateLimitBackend(RateLimitBackend):
         self.db = db
     def check_and_log(self, api_key, identifier, endpoint, config, align_to_minute):
         # Use existing DB logic
-        now = datetime.utcnow()
+        now = datetime.now(datetime.UTC)
         if align_to_minute:
             window_start = now.replace(second=0, microsecond=0)
         else:
@@ -85,8 +85,8 @@ class DBRateLimitBackend(RateLimitBackend):
             api_key=api_key,
             endpoint=endpoint,
             identifier=identifier,
-            from_time=datetime.utcfromtimestamp(window_start_ts),
-            to_time=datetime.utcfromtimestamp(window_end_ts)
+            from_time=datetime.fromtimestamp(window_start_ts, datetime.UTC),
+            to_time=datetime.fromtimestamp(window_end_ts, datetime.UTC)
         )
         usage_count = len(crud_usage_log.get_usage_logs(self.db, usage_query))
         if usage_count < config.limit:

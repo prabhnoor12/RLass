@@ -13,7 +13,7 @@ def create_api_key(db: Session, api_key_in: APIKeyCreate) -> APIKey:
         key=key,
         user_id=api_key_in.user_id,
         is_active=True,
-        created_at=datetime.utcnow(),
+        created_at=datetime.now(datetime.UTC),
         last_used=None
     )
     db.add(db_api_key)
@@ -54,5 +54,5 @@ def update_last_used(db: Session, key: str) -> None:
     """Update the last_used timestamp for an API key in the database."""
     api_key = db.query(APIKey).filter(APIKey.key == key).first()
     if api_key:
-        api_key.last_used = datetime.utcnow()
+        api_key.last_used = datetime.now(datetime.UTC)
         db.commit()

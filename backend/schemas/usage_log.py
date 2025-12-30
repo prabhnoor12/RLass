@@ -1,6 +1,10 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from datetime import datetime
+
+if TYPE_CHECKING:
+    from .api_key import APIKeyRead
+    from .user import UserRead
 
 class UsageLogRead(BaseModel):
     id: str
@@ -12,11 +16,6 @@ class UsageLogRead(BaseModel):
     status: str
     api_key_info: Optional["APIKeyRead"] = None
     user: Optional["UserRead"] = None
-    # For forward reference
-    from typing import TYPE_CHECKING
-    if TYPE_CHECKING:
-        from .api_key import APIKeyRead
-        from .user import UserRead
 
 class UsageLogQuery(BaseModel):
     api_key: Optional[str] = None

@@ -22,6 +22,14 @@ def engine():
     Base.metadata.create_all(bind=engine)
     return engine
 
+# Clean up usage_stats table after each test for isolation
+import backend.models.stats
+@pytest.fixture(autouse=True)
+def cleanup_usage_stats(db_session):
+    yield
+    db_session.query(backend.models.stats.UsageStats).delete()
+    db_session.commit()
+
 @pytest.fixture(scope="function")
 def db_session(engine):
     connection = engine.connect()

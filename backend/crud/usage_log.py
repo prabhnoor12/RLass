@@ -28,7 +28,7 @@ def log_usage(
         customer_id=customer_id,
         endpoint=endpoint,
         identifier=identifier,
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(datetime.UTC),
         status=status
     )
     db.add(entry)

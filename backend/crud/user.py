@@ -12,7 +12,7 @@ def create_user(db: Session, user_in: UserCreate) -> User:
         id=user_id,
         email=user_in.email,
         hashed_password=user_in.password,  # Hash in real app!
-        created_at=datetime.utcnow(),
+        created_at=datetime.now(datetime.UTC),
         is_active=True
     )
     db.add(db_user)

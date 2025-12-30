@@ -4,7 +4,7 @@ from ..schemas.stats import UsageStatsCreate
 from typing import Optional, List
 
 def create_usage_stats(db: Session, stats_in: UsageStatsCreate) -> UsageStats:
-    db_stats = UsageStats(**stats_in.dict())
+    db_stats = UsageStats(**stats_in.model_dump())
     db.add(db_stats)
     db.commit()
     db.refresh(db_stats)

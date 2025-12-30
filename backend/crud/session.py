@@ -29,7 +29,7 @@ def deactivate_session(db: DBSession, session_token: str) -> Optional[Session]:
     return db_session
 
 def delete_expired_sessions(db: DBSession) -> int:
-    now = datetime.utcnow()
+    now = datetime.now(datetime.UTC)
     deleted = db.query(Session).filter(Session.expires_at < now).delete()
     db.commit()
     return deleted
