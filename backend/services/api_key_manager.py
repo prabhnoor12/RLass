@@ -21,6 +21,9 @@ def issue_api_key_for_user(db: Session, user_id: str) -> APIKey:
 	api_key_in = APIKeyCreate(user_id=user_id)
 	api_key = crud_api_key.create_api_key(db, api_key_in)
 	logger.info(f"Issued new API key for user {user_id}")
+	# Audit log for key issuance
+	from ..services.audit import log_audit_event
+	log_audit_event(db, action="issue_api_key", actor_id=user_id, target=api_key.key, event_type="key_usage")
 	return api_key
 
 def revoke_api_key(db: Session, key: str) -> bool:
@@ -30,6 +33,11 @@ def revoke_api_key(db: Session, key: str) -> bool:
 	result = crud_api_key.revoke_api_key(db, key)
 	if result:
 		logger.info(f"Revoked API key: {key}")
+		# Audit log for key revocation
+		from ..services.audit import log_audit_event
+		api_key = crud_api_key.get_api_key(db, key)
+		actor_id = api_key.user_id if api_key else None
+		log_audit_event(db, action="revoke_api_key", actor_id=actor_id, target=key, event_type="key_usage")
 	else:
 		logger.warning(f"API key not found for revocation: {key}")
 	return result
@@ -73,6 +81,11 @@ def update_api_key_last_used(db: Session, key: str) -> None:
 	"""
 	crud_api_key.update_last_used(db, key)
 	logger.info(f"Updated last_used for API key {key}")
+	# Audit log for key usage
+	from ..services.audit import log_audit_event
+	api_key = crud_api_key.get_api_key(db, key)
+	actor_id = api_key.user_id if api_key else None
+	log_audit_event(db, action="use_api_key", actor_id=actor_id, target=key, event_type="key_usage")
 
 def reactivate_api_key(db: Session, key: str) -> bool:
 	"""

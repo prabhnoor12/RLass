@@ -21,3 +21,6 @@ class AuditLogQuery(BaseModel):
     target: Optional[str] = None
     from_time: Optional[datetime] = None
     to_time: Optional[datetime] = None
+    event_type: Optional[str] = None
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None

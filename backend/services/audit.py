@@ -5,16 +5,28 @@ from ..models.audit_log import AuditLog
 from typing import List, Optional
 
 def log_audit_event(
-	db: Session,
-	action: str,
-	actor_id: str,
-	target: Optional[str] = None,
-	details: Optional[str] = None
-) -> AuditLog:
-	"""
-	Log an audit event to the database.
-	"""
-	return crud_audit_log.log_action(db, action, actor_id, target, details)
+		db: Session,
+		action: str,
+		actor_id: str,
+		target: Optional[str] = None,
+		details: Optional[str] = None,
+		event_type: Optional[str] = None,
+		ip_address: Optional[str] = None,
+		user_agent: Optional[str] = None
+	) -> AuditLog:
+		"""
+		Log an audit event to the database, with security insights.
+		"""
+		return crud_audit_log.log_action(
+			db,
+			action,
+			actor_id,
+			target,
+			details,
+			event_type,
+			ip_address,
+			user_agent
+		)
 
 
 def get_audit_events(

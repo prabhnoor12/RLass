@@ -18,7 +18,11 @@ def create_plan_with_check(db: Session, plan_in: PlanCreate) -> Plan:
 		logger.warning(f"Plan '{plan_in.name}' already exists.")
 		raise ValueError(f"Plan '{plan_in.name}' already exists.")
 	logger.info(f"Creating plan: {plan_in.name}")
-	return crud_plan.create_plan(db, plan_in)
+	plan = crud_plan.create_plan(db, plan_in)
+	# Audit log for plan creation (admin action)
+	from ..services.audit import log_audit_event
+	log_audit_event(db, action="create_plan", actor_id="admin", target=plan.name, event_type="admin_action")
+	return plan
 
 def get_plan(db: Session, name: str) -> Optional[Plan]:
 	"""
@@ -37,7 +41,11 @@ def update_plan_active_status(db: Session, plan_id: int, is_active: bool) -> Opt
 	Update the active status of a plan.
 	"""
 	logger.info(f"Updating plan {plan_id} active status to {is_active}")
-	return crud_plan.update_plan_status(db, plan_id, is_active)
+	plan = crud_plan.update_plan_status(db, plan_id, is_active)
+	# Audit log for plan status change (admin action)
+	from ..services.audit import log_audit_event
+	log_audit_event(db, action="update_plan_status", actor_id="admin", target=str(plan_id), details=f"is_active={is_active}", event_type="admin_action")
+	return plan
 
 def deactivate_plan(db: Session, plan_id: int) -> Optional[Plan]:
 	"""

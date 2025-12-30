@@ -12,13 +12,21 @@ def create_user(db: Session, user_in: UserCreate) -> User:
 	"""
 	Create a new user in the system.
 	"""
-	return crud_user.create_user(db, user_in)
+	user = crud_user.create_user(db, user_in)
+	# Audit log for user creation (admin action)
+	from ..services.audit import log_audit_event
+	log_audit_event(db, action="create_user", actor_id="admin", target=user.id, event_type="admin_action")
+	return user
 
 def update_user(db: Session, user_id: str, email: Optional[str] = None, password: Optional[str] = None, is_active: Optional[bool] = None) -> Optional[User]:
 	"""
 	Update user details.
 	"""
-	return crud_user.update_user(db, user_id, email, password, is_active)
+	user = crud_user.update_user(db, user_id, email, password, is_active)
+	# Audit log for user update (admin action)
+	from ..services.audit import log_audit_event
+	log_audit_event(db, action="update_user", actor_id="admin", target=user_id, event_type="admin_action")
+	return user
 
 def delete_user(db: Session, user_id: str) -> bool:
 	"""

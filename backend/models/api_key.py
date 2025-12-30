@@ -5,7 +5,7 @@ from typing import Optional
 
 
 from sqlalchemy.orm import relationship
-from ..database import Base
+from database import Base
 
 class APIKey(Base):
     __tablename__ = "api_keys"

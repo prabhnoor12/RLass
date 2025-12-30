@@ -11,10 +11,13 @@ def log_action(
     action: str,
     actor_id: str,
     target: Optional[str] = None,
-    details: Optional[str] = None
+    details: Optional[str] = None,
+    event_type: Optional[str] = None,
+    ip_address: Optional[str] = None,
+    user_agent: Optional[str] = None
 ) -> AuditLog:
     """
-    Log an audit action to the database.
+    Log an audit action to the database, with security insights.
     """
     entry = AuditLog(
         id=str(uuid.uuid4()),
@@ -22,7 +25,10 @@ def log_action(
         actor_id=actor_id,
         target=target,
         timestamp=datetime.utcnow(),
-        details=details
+        details=details,
+        event_type=event_type,
+        ip_address=ip_address,
+        user_agent=user_agent
     )
     db.add(entry)
     db.commit()

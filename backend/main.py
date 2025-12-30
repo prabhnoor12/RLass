@@ -1,9 +1,19 @@
-
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.openapi.utils import get_openapi
-from .api import api_key, usage_log, stats, settings, plan, maintenance, authorization, user, rate_limit
+from .api.api_key import router as api_key
+from .api.usage_log import router as usage_log
+from .api.stats import router as stats
+from .api.settings import router as settings
+from .api.plan import router as plan
+from .api.maintenance import router as maintenance
+from .api.authorization import router as authorization
+from .api.user import router as user
+from .api.rate_limit import router as rate_limit
+from .api.audit_log import router as audit_log
+from .api import paypal_webhook
+from .api.usage_dashboard import router as usage_dashboard_router
 import logging
 
 app = FastAPI(
@@ -38,6 +48,9 @@ app.include_router(maintenance.router, prefix="/maintenance", tags=["Maintenance
 app.include_router(authorization.router, prefix="/authorization", tags=["Authorization"])
 app.include_router(user.router, prefix="/user", tags=["User"])
 app.include_router(rate_limit.router, prefix="/rate-limit", tags=["Rate Limit"])
+app.include_router(audit_log.router, prefix="/audit-log", tags=["Audit Log"])
+app.include_router(paypal_webhook.router, prefix="/webhook", tags=["Webhook"])
+app.include_router(usage_dashboard_router, prefix="/usage-dashboard", tags=["Usage Dashboard"])
 
 # Health check endpoint
 @app.get("/health", tags=["Health"])

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from ..database import Base
+from database import Base
 import datetime
 
 class AuthToken(Base):
