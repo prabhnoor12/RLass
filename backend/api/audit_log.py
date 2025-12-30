@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from ..services.audit import get_audit_events
-from ..schemas.audit_log import AuditLogQuery
+from ..schemas.audit_log import AuditLogQuery, AuditLogRead
 from ..database import get_db
 from ..utils.response import success_response
 from typing import Optional
@@ -28,5 +28,7 @@ def export_audit_logs(
         to_time=to_time
     )
     logs = get_audit_events(db, query)
-    # Optionally, format as CSV or JSON
-    return success_response([log.__dict__ for log in logs])
+    # Use Pydantic model for serialization and ensure datetime is JSON serializable
+    return success_response([
+        AuditLogRead.model_validate(log).model_dump(mode="json") for log in logs
+    ])

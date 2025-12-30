@@ -1,5 +1,11 @@
 from pydantic import BaseModel
 from typing import Optional
+
+# Import UserRead for use in AuditLogRead
+from .user import UserRead
+from .usage_log import UsageLogRead
+from .api_key import APIKeyRead
+from .rate_limit import RateLimitConfigRead
 from datetime import datetime
 from typing import TYPE_CHECKING, ClassVar
 
@@ -15,6 +21,7 @@ class AuditLogRead(BaseModel):
     if TYPE_CHECKING:
         from .user import UserRead
 
+
 class AuditLogQuery(BaseModel):
     actor_id: Optional[str] = None
     action: Optional[str] = None
@@ -24,3 +31,6 @@ class AuditLogQuery(BaseModel):
     event_type: Optional[str] = None
     ip_address: Optional[str] = None
     user_agent: Optional[str] = None
+
+# Fix for Pydantic forward references
+AuditLogRead.model_rebuild()
