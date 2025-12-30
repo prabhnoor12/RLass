@@ -1,6 +1,6 @@
-
+import datetime
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
+from datetime import timedelta
 from ..crud import rate_limit as crud_rate_limit
 from ..crud import usage_log as crud_usage_log
 from ..crud import api_key as crud_api_key
@@ -28,7 +28,7 @@ class InMemoryRateLimitBackend(RateLimitBackend):
         self.configs = {}
 
     def check_and_log(self, api_key, identifier, endpoint, config, align_to_minute):
-        now = datetime.now(datetime.UTC)
+        now = datetime.datetime.now(datetime.UTC)
         if align_to_minute:
             window_start = now.replace(second=0, microsecond=0)
         else:
@@ -73,7 +73,7 @@ class DBRateLimitBackend(RateLimitBackend):
         self.db = db
     def check_and_log(self, api_key, identifier, endpoint, config, align_to_minute):
         # Use existing DB logic
-        now = datetime.now(datetime.UTC)
+        now = datetime.datetime.now(datetime.UTC)
         if align_to_minute:
             window_start = now.replace(second=0, microsecond=0)
         else:
@@ -85,8 +85,8 @@ class DBRateLimitBackend(RateLimitBackend):
             api_key=api_key,
             endpoint=endpoint,
             identifier=identifier,
-            from_time=datetime.fromtimestamp(window_start_ts, datetime.UTC),
-            to_time=datetime.fromtimestamp(window_end_ts, datetime.UTC)
+            from_time=datetime.datetime.fromtimestamp(window_start_ts, datetime.UTC),
+            to_time=datetime.datetime.fromtimestamp(window_end_ts, datetime.UTC)
         )
         usage_count = len(crud_usage_log.get_usage_logs(self.db, usage_query))
         if usage_count < config.limit:

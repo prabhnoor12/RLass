@@ -56,3 +56,20 @@ def token_data(test_user):
         "expires_at": datetime.now(UTC) + timedelta(hours=1),
         "is_active": True
     }
+
+@pytest.fixture(scope="function")
+def usage_stats(db_session, test_user):
+    from backend.models.stats import UsageStats
+    stats = UsageStats(user_id=int(test_user.id), endpoint="/endpoint1", count=5, period="day")
+    db_session.add(stats)
+    db_session.commit()
+    return stats
+
+@pytest.fixture(scope="function")
+def usage_log(db_session, test_user):
+    from backend.models.usage_log import UsageLog
+    # Use test_user.id as identifier so summarize_usage with identifier=user_id will match
+    log = UsageLog(id="log1", api_key="key1", customer_id=test_user.id, endpoint="/endpoint1", identifier=str(test_user.id), timestamp=datetime.now(UTC), status="allowed")
+    db_session.add(log)
+    db_session.commit()
+    return log

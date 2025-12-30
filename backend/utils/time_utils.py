@@ -1,5 +1,5 @@
 import time
-from datetime import datetime
+import datetime
 
 def current_unix_timestamp() -> int:
     """Return the current Unix timestamp as an integer."""
@@ -7,7 +7,7 @@ def current_unix_timestamp() -> int:
 
 def format_unix_timestamp(ts: int) -> str:
     """Format a Unix timestamp as an ISO8601 string."""
-    return datetime.fromtimestamp(ts, datetime.UTC).isoformat() + 'Z'
+    return datetime.datetime.fromtimestamp(ts, datetime.UTC).isoformat() + 'Z'
 
 def seconds_until_reset(period_seconds: int) -> int:
     """Return seconds until the next reset window."""

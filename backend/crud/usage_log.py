@@ -2,7 +2,7 @@
 from sqlalchemy.orm import Session, joinedload
 from ..models.usage_log import UsageLog
 from ..schemas.usage_log import UsageLogQuery
-from datetime import datetime
+import datetime
 from typing import Optional, List
 import uuid
 
@@ -28,7 +28,7 @@ def log_usage(
         customer_id=customer_id,
         endpoint=endpoint,
         identifier=identifier,
-        timestamp=datetime.now(datetime.UTC),
+        timestamp=datetime.datetime.now(datetime.UTC),
         status=status
     )
     db.add(entry)

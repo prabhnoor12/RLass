@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
 from ..models.user import User
 from ..schemas.user import UserCreate
-from datetime import datetime
+import datetime
 from typing import Optional, List
 import uuid
 
@@ -12,7 +12,7 @@ def create_user(db: Session, user_in: UserCreate) -> User:
         id=user_id,
         email=user_in.email,
         hashed_password=user_in.password,  # Hash in real app!
-        created_at=datetime.now(datetime.UTC),
+        created_at=datetime.datetime.now(datetime.UTC),
         is_active=True
     )
     db.add(db_user)

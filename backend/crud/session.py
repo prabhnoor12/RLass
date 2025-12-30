@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session as DBSession
 from ..models.session import Session
 from ..schemas.session import SessionCreate
 from typing import Optional, List
-from datetime import datetime
+import datetime
 
 def create_session(db: DBSession, session_in: SessionCreate) -> Session:
     db_session = Session(**session_in.dict())
@@ -29,7 +29,7 @@ def deactivate_session(db: DBSession, session_token: str) -> Optional[Session]:
     return db_session
 
 def delete_expired_sessions(db: DBSession) -> int:
-    now = datetime.now(datetime.UTC)
+    now = datetime.datetime.now(datetime.UTC)
     deleted = db.query(Session).filter(Session.expires_at < now).delete()
     db.commit()
     return deleted

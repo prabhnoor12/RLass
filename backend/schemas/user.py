@@ -7,6 +7,12 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .api_key import APIKeyRead
+    from .usage_log import UsageLogRead
+    from .rate_limit import RateLimitConfigRead
+
 class UserRead(BaseModel):
     id: str
     email: str
@@ -15,12 +21,6 @@ class UserRead(BaseModel):
     api_keys: Optional[List["APIKeyRead"]] = None
     usage_logs: Optional[List["UsageLogRead"]] = None
     rate_limits: Optional[List["RateLimitConfigRead"]] = None
-    # For forward reference
-    from typing import TYPE_CHECKING
-    if TYPE_CHECKING:
-        from .api_key import APIKeyRead
-        from .usage_log import UsageLogRead
-        from .rate_limit import RateLimitConfigRead
 
 class UserCreate(BaseModel):
     email: str
