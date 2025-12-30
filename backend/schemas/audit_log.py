@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
+from typing import TYPE_CHECKING, ClassVar
 
 class AuditLogRead(BaseModel):
     id: str
@@ -10,8 +11,7 @@ class AuditLogRead(BaseModel):
     timestamp: datetime
     details: Optional[str] = None
     actor: Optional["UserRead"] = None
-    # For forward reference
-    from typing import TYPE_CHECKING
+    TYPE_CHECKING: ClassVar[bool] = False
     if TYPE_CHECKING:
         from .user import UserRead
 

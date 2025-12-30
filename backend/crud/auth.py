@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session
 from ..models.auth import AuthToken
 from ..schemas.auth import AuthTokenCreate
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, UTC
 
 def create_auth_token(db: Session, token_in: AuthTokenCreate) -> AuthToken:
-    db_token = AuthToken(**token_in.dict())
+    db_token = AuthToken(**token_in.model_dump())
     db.add(db_token)
     db.commit()
     db.refresh(db_token)
@@ -23,7 +23,7 @@ def deactivate_auth_token(db: Session, token: str) -> Optional[AuthToken]:
     return db_token
 
 def delete_expired_tokens(db: Session) -> int:
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     deleted = db.query(AuthToken).filter(AuthToken.expires_at < now).delete()
     db.commit()
     return deleted

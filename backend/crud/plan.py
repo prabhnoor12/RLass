@@ -4,7 +4,7 @@ from ..schemas.plan import PlanCreate
 from typing import Optional, List
 
 def create_plan(db: Session, plan_in: PlanCreate) -> Plan:
-    db_plan = Plan(**plan_in.dict())
+    db_plan = Plan(**plan_in.model_dump())
     db.add(db_plan)
     db.commit()
     db.refresh(db_plan)

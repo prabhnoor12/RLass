@@ -1,4 +1,5 @@
 
+from datetime import UTC
 from sqlalchemy.orm import Session, joinedload
 from ..models.audit_log import AuditLog
 from ..schemas.audit_log import AuditLogQuery
@@ -24,7 +25,7 @@ def log_action(
         action=action,
         actor_id=actor_id,
         target=target,
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(UTC),
         details=details,
         event_type=event_type,
         ip_address=ip_address,

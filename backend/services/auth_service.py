@@ -4,7 +4,7 @@ from ..crud import auth as crud_auth
 from ..schemas.auth import AuthTokenCreate
 from ..models.auth import AuthToken
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, UTC
 import logging
 
 logger = logging.getLogger("auth_service")
@@ -30,7 +30,11 @@ def validate_token(db: Session, token: str, check_expiry: bool = True) -> Option
     if not db_token.is_active:
         logger.info(f"Token inactive: {token}")
         return None
-    if check_expiry and db_token.expires_at < datetime.utcnow():
+    expires_at = db_token.expires_at
+    # Ensure both datetimes are offset-aware (UTC)
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=UTC)
+    if check_expiry and expires_at < datetime.now(UTC):
         logger.info(f"Token expired: {token}")
         return None
     return db_token

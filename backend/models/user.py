@@ -1,10 +1,10 @@
 from sqlalchemy import Column, String, Boolean, DateTime
-from sqlalchemy.orm import declarative_base
-from datetime import datetime
+ 
+from datetime import datetime, UTC
 
 
 from sqlalchemy.orm import relationship
-from database import Base
+from backend.database import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -12,10 +12,11 @@ class User(Base):
     id = Column(String, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
     is_active = Column(Boolean, default=True)
 
     api_keys = relationship("APIKey", back_populates="user", cascade="all, delete-orphan")
     audit_logs = relationship("AuditLog", back_populates="actor", cascade="all, delete-orphan", foreign_keys="AuditLog.actor_id")
     usage_logs = relationship("UsageLog", back_populates="user", cascade="all, delete-orphan")
     rate_limits = relationship("RateLimitConfig", back_populates="user", cascade="all, delete-orphan")
+    auth_tokens = relationship("AuthToken", back_populates="user", cascade="all, delete-orphan")

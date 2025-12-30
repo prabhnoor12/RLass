@@ -13,5 +13,6 @@ class PlanCreate(PlanBase):
 class PlanRead(PlanBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }

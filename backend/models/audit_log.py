@@ -1,11 +1,11 @@
 from sqlalchemy import Column, String, DateTime, ForeignKey
-from sqlalchemy.orm import declarative_base
+ 
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, UTC
 
 
 from sqlalchemy.orm import relationship
-from database import Base
+from backend.database import Base
 
 
 class AuditLog(Base):
@@ -15,7 +15,7 @@ class AuditLog(Base):
     action = Column(String, nullable=False)
     actor_id = Column(String, ForeignKey("users.id"), nullable=False)
     target = Column(String, nullable=True)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=lambda: datetime.now(UTC))
     details = Column(String, nullable=True)
     # New fields for security insights
     event_type = Column(String, nullable=True)  # e.g., 'key_usage', 'quota_change', 'admin_action'
